@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import axios from 'axios';
+import './App.css'
+import MovieCars from './comonents/MovieCards';
+import preloader from './preloader.gif';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component{
+  constructor(){
+    super();
+    this.state={
+      movies:[],
+      loader:true
+    }
+  }
+  componentDidMount(){
+    axios.get("https://www.omdbapi.com/?apikey=45f0782a&s=war")
+          .then(res=>this.setState({movies:res.data.Search,loader:false}));
+  }
+  render(){
+    const {loader,movies}=this.state
+    return(
+      <div>
+        {loader?<div style={{textAlign:"center",marginTop:"45vh"}}><img src={preloader} alt="loader"/></div>:
+        <div className="d-flex flex-wrap card-wraper">{movies && movies.map((items)=>(<MovieCars {...items}/>))}</div>}
+      </div>
+    )
+  }
 }
 
 export default App;
